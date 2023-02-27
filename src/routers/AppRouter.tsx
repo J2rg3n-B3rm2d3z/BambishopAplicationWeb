@@ -6,6 +6,7 @@ import { ProproScreen } from "../components/propro/ProproScreen"
 import { ProveedorScreen } from "../components/proveedor/ProveedorScreen"
 import { InicioScreen } from "../components/inicio/InicioScreen"
 import { Navbar } from "../components/ui/Navbar"
+import { TipoScreen } from "../components/producto/TipoScreen"
 
 
 
@@ -20,6 +21,7 @@ export const AppRouter= (): JSX.Element => {
                 <Route path="/adquisicion" element={<ProproScreen/>}/>
                 <Route path="/factura" element={<FacturaScreen/>}/>
                 <Route path="/cliente" element={<ClienteScreen/>}/>
+                <Route path="/tipo" element={<TipoScreen/>}/>
             </Routes>
         </BrowserRouter>
     )

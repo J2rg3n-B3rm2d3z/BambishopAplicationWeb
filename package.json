@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.3",
+    "@types/react-table": "^7.7.14",
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.10.3",
     "localforage": "^1.10.0",
@@ -19,6 +20,8 @@
     "react-dom": "^18.2.0",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.8.1",
+    "react-select": "^5.7.0",
+    "react-table": "^7.8.0",
     "sass": "^1.58.3",
     "sort-by": "^1.2.0"
   },
