@@ -1,7 +1,7 @@
 import { cliente } from '../../interfaces/GetCliente';
 import { DinamicTable } from '../DinamicTable';
+import { ColumnFilter } from '../ColumnFilter';
 import { Selector } from '../Selector';
-import { SingleValue } from 'react-select/dist/declarations/src';
 
 interface ClienteScreenProps {
     id?: number;
@@ -15,7 +15,7 @@ const objetoprueba = [{ label: 'Id', value: 'IdCliente' },
 { label: 'Telefono', value: 'Telefono' },]
 
 
-export const ClienteScreen = (prompt: ClienteScreenProps): JSX.Element => {
+export const ClienteScreen = ({id=0}: ClienteScreenProps): JSX.Element => {
     return (
         <div className="container border bg-light">
 
@@ -42,27 +42,29 @@ export const ClienteScreen = (prompt: ClienteScreenProps): JSX.Element => {
                         opciones={objetoprueba}
                         esBuscador={false} />
                 </div>
-
             </div>
             <br />
 
             {/* TODO */}
 
             <div className="row text-start">
-                react-table
-                {/* <div className='col-1'>
+                
+                <div className='col-1'>
                 </div>
                 <div className='col-10 text-center '>
                     <DinamicTable Cabecera={
                         objetoprueba.map(
-                            ({ label, value }) => ({ Header: label, accessor: value })
+                            ({ label, value }) => ({ Header: label, accessor: value, Filter:ColumnFilter })
                         )
                     } Cuerpo={clientes} />
                 </div>
                 <div className='col-1'>
-                </div> */}
-                material-teble
-                TODO
+                </div>
+                
+            </div>
+
+            <div className="row text-start">
+                
             </div>
 
         </div>
