@@ -1,12 +1,8 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
-import { ClienteScreen } from "../components/cliente/ClienteScreen"
-import { FacturaScreen } from "../components/factura/FacturaScreen"
-import { ProductoScreen } from "../components/producto/ProductoScreen"
-import { ProproScreen } from "../components/propro/ProproScreen"
-import { ProveedorScreen } from "../components/proveedor/ProveedorScreen"
-import { InicioScreen } from "../components/inicio/InicioScreen"
-import { Navbar } from "../components/ui/Navbar"
-import { TipoScreen } from "../components/producto/TipoScreen"
+import { ClienteScreen, FacturaScreen, InicioScreen,
+     ProductoScreen, ProproScreen, ProveedorScreen, 
+     TipoScreen } from "../components/screen"
+import { Navbar } from "../components/ui"
 
 
 
@@ -17,10 +13,10 @@ export const AppRouter= (): JSX.Element => {
             <Routes>
                 <Route path="/" element={<InicioScreen/>}/>
                 <Route path="/producto" element={<ProductoScreen/>}/>
-                <Route path="/proveedor" element={<ProveedorScreen/>}/>
+                <Route path="/proveedor" element={<ProveedorScreen key={"Proveedor"} />}/>
                 <Route path="/adquisicion" element={<ProproScreen/>}/>
                 <Route path="/factura" element={<FacturaScreen/>}/>
-                <Route path="/cliente" element={<ClienteScreen/>}/>
+                <Route path="/cliente" element={<ClienteScreen key={"Cliente"}/>}/>
                 <Route path="/tipo" element={<TipoScreen/>}/>
             </Routes>
         </BrowserRouter>

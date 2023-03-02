@@ -30,8 +30,8 @@ export interface Proveedor {
     IdProveedor:number,
     NombreProveedor:string,
     Direccion:string,
-    Telefono:string,
-    Correo:string
+    Telefono:(string | null),
+    Correo:(string | null),
 }
 
 export interface DetalleFactura {

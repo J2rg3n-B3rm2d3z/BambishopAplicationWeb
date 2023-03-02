@@ -10,7 +10,6 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.3",
-    "@types/react-table": "^7.7.14",
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.10.3",
     "localforage": "^1.10.0",
@@ -28,6 +27,7 @@
   "devDependencies": {
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
+    "@types/react-table": "^7.7.14",
     "@vitejs/plugin-react-swc": "^3.0.0",
     "typescript": "^4.9.3",
     "vite": "^4.1.0"

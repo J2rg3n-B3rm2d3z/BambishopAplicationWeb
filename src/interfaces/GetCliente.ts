@@ -2,7 +2,7 @@ import { Cliente } from "./Modelos";
 
 export const cliente:Cliente[] = [
     {
-        IdCliente:1,
+        IdCliente:0,
         Nombres:"Jurgen",
         Apellidos:"Bermudez Picado",
         Telefono:"89897656"
