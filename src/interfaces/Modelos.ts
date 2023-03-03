@@ -1,8 +1,8 @@
 export interface Cliente {
-    IdCliente:number,
-    Nombres:string,
-    Apellidos:string,
-    Telefono:string
+    idCliente:number,
+    nombres:string,
+    apellidos:string,
+    telefono:string
 }
 
 export interface Producto {

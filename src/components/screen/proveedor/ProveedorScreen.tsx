@@ -9,7 +9,6 @@ const objetoprueba = [{ header: 'Id', accessor: 'IdProveedor' },
 { header: 'Telefono', accessor: 'Telefono' },
 { header: 'Correo', accessor: 'Correo' }]
 
-
 export const ProveedorScreen= (): JSX.Element => {
     return (
 
@@ -30,7 +29,9 @@ export const ProveedorScreen= (): JSX.Element => {
             <div className="row text-start">
                 <div className='col-1' />
                 <div className='col-10 text-center '>
-                    <DinamicTable Cabecera={objetoprueba} Cuerpo={proveedores}  Direccion={"Formulario"}/>
+                    <DinamicTable Cabecera={objetoprueba} Cuerpo={proveedores} Direccion={"Formulario"} setvalue={function (value: any): void {
+                        throw new Error("Function not implemented.");
+                    } }/>
 
                 </div>
                 <div className='col-1' />

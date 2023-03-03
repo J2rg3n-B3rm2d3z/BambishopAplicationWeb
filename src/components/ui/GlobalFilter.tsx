@@ -4,7 +4,6 @@ interface GlobalFilterPropt {
     setfilter: React.Dispatch<React.SetStateAction<string>>;
 }
 
-
 export const GlobalFilter = ({ filter, setfilter }: GlobalFilterPropt): JSX.Element => {
     return (
 

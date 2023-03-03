@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import { FC, SetStateAction, useMemo } from 'react';
 import { useTable, useSortBy, usePagination, useGlobalFilter } from 'react-table';
 import { Columnas } from '../../interfaces';
 import { GlobalFilter } from './GlobalFilter';
@@ -7,14 +7,16 @@ interface DinamicTableProps {
     Cabecera: Columnas[];
     Cuerpo: object[];
     Direccion: string;
+    setvalue: React.Dispatch<SetStateAction<any>>
+    selectedCUD: string;
 }
 
-export const DinamicTable: FC<DinamicTableProps> = ({ Cabecera, Cuerpo, Direccion }: DinamicTableProps): JSX.Element => {
+export const DinamicTable: FC<DinamicTableProps> = ({ selectedCUD, setvalue, Cabecera, Cuerpo, Direccion }: DinamicTableProps): JSX.Element => {
 
-    const columns = useMemo(() => Cabecera, []);
-    const data = useMemo(() => Cuerpo, []);
+    // const columns = useMemo(() => Cabecera, []);
+    // const data = useMemo(() => Cuerpo, []);
 
-    const Usetable: any = useTable({ columns: columns, data: data }, useGlobalFilter, useSortBy, usePagination);
+    const Usetable: any = useTable({ columns: Cabecera, data: Cuerpo }, useGlobalFilter, useSortBy, usePagination);
 
     const { getTableProps,
         getTableBodyProps,
@@ -35,12 +37,25 @@ export const DinamicTable: FC<DinamicTableProps> = ({ Cabecera, Cuerpo, Direccio
     const element = document.getElementById(Direccion);
 
     const handleRowClick = (row: any) => {
-        console.log(row.original); // Accede a los datos de la fila original
-        element!.scrollIntoView({ behavior:"smooth" });
+        if (selectedCUD !== 'Agregar') {
+            console.log(row.original); // Accede a los datos de la fila original
+            setvalue(row.original);
+            element!.scrollIntoView({ behavior: "smooth" });
+        }
     };
 
     return (
         <div>
+
+            {/* {Cuerpo.length === 0?
+            (
+            <>
+            </>    
+            ):(
+            <>
+            </>
+            )} */}
+
             <div className="row text-start">
                 <div className='col-2' />
                 <div className='col-8'>
@@ -78,7 +93,7 @@ export const DinamicTable: FC<DinamicTableProps> = ({ Cabecera, Cuerpo, Direccio
                             page.map((row: any, key: number) => {
                                 prepareRow(row)
                                 return (
-                                    <tr {...row.getRowProps({ style: { cursor: "pointer" } })} key={key} onClick={() => handleRowClick(row)}>
+                                    <tr {...row.getRowProps({ style: (selectedCUD !== 'Agregar')? { cursor: "pointer" } : { cursor: "default" }})} key={key} onClick={() => handleRowClick(row)}>
                                         {
                                             row.cells.map((cell: any, key: number) => {
                                                 return (

@@ -1,11 +1,17 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { clienteScreenSlice } from './slices/clientescreen/clienteSlide';
+import { bambishopApi } from './slices/apis/clienteapi';
 // ...
 
 export const store = configureStore({
   reducer: {
-    clienteScreenSlice: clienteScreenSlice.reducer
+    clienteScreenSlice: clienteScreenSlice.reducer,
+
+    [bambishopApi.reducerPath]: bambishopApi.reducer, 
   },
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware()
+  .concat( bambishopApi.middleware )
+  
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
