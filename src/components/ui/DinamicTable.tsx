@@ -38,7 +38,6 @@ export const DinamicTable: FC<DinamicTableProps> = ({ selectedCUD, setvalue, Cab
 
     const handleRowClick = (row: any) => {
         if (selectedCUD !== 'Agregar') {
-            console.log(row.original); // Accede a los datos de la fila original
             setvalue(row.original);
             element!.scrollIntoView({ behavior: "smooth" });
         }

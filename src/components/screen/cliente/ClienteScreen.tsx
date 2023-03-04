@@ -1,7 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Cliente, cliente, Columnas, columnasClientes } from '../../../interfaces';
-import { useGetClientesQuery } from '../../../store/slices/apis';
+import { Cliente, Columnas, columnasClientes } from '../../../interfaces';
+import {
+    useGetClientesQuery, useCreateClienteMutation,
+    useDeleteClienteMutation, useUpdateClienteMutation
+} from '../../../store/slices/apis';
 import { DinamicTable, Input } from '../../ui';
+import Swal from 'sweetalert2'
 import '../loading.scss';
 
 interface clienteScreenProps {
@@ -15,65 +19,118 @@ const clientedefault: Cliente = {
     telefono: ''
 }
 
-export const ClienteScreen = ({ Id = 4 }: clienteScreenProps): JSX.Element => {
+export const ClienteScreen = ({ Id = 0 }: clienteScreenProps): JSX.Element => {
 
-    const { data, isLoading, isSuccess } = useGetClientesQuery('');
+    const { data, isLoading: isLoadingGet, isSuccess: isSuccessGet } = useGetClientesQuery();
+    const [createCliente] = useCreateClienteMutation();
+    const [deleteCliente] = useDeleteClienteMutation();
+    const [updateCliente] = useUpdateClienteMutation();
 
     const [clientes, setClientes] = useState<Cliente[]>([]);
-    const [clientetemp, setClienteTemp] = useState<Cliente>(clientedefault)
-
-    useEffect(() => { 
-
-        if (isSuccess && (data!==undefined)) {
-          setClientes(data);
-          (clientes.find((cliente) => cliente.idCliente === Id)) ?
-          setClienteTemp(clientes.find((cliente) => { return cliente.idCliente === Id })!):
-          setClienteTemp(clientedefault)
-          console.log(clientes)
-          console.log(clientetemp)
-        }
-
-      }, [isSuccess, data]);
-    
-
-   
-
-    // const [clientetemp, setClienteTemp] = useState<(Cliente)>(
-    //     (clientes.find((cliente: { idCliente: number; }) => cliente.idCliente === Id)) ?
-    //         clientes.find((cliente: { idCliente: number; }) => { return cliente.idCliente === Id })! :
-    //         clientedefault
-    // )
-
+    const [clientetemp, setClienteTemp] = useState<Cliente>(clientedefault);
     const { apellidos, nombres, idCliente, telefono } = clientetemp
 
-
-    // const clientes = useMemo(() => cliente, []);
-    // const columnasCliente: Columnas[] = useMemo(() => columnasClientes, []);
-
-    // const [clientetemp, setClienteTemp] = useState<(Cliente)>(
-    //     (clientes.find((cliente: { idCliente: number; }) => cliente.idCliente === Id)) ?
-    //         clientes.find((cliente: { idCliente: number; }) => { return cliente.idCliente === Id })! :
-    //         clientedefault
-    // )
-
-    // const { apellidos, nombres, idCliente, telefono } = clientetemp
-
-
+    const [primeraVez, setPrimeraVez] = useState(true);
     const columnasCliente: Columnas[] = useMemo(() => columnasClientes, []);
-
     const [selectedCUD, setSelectedCUD] = useState({ checked: 'Actualizar' });
+
+    useEffect(() => {
+
+        if (!isSuccessGet && !isLoadingGet) {
+            Swal.fire(
+                'Error de conexion',
+                'Hubo un error al establecer conexion',
+                'error'
+            );
+        }
+
+    }, [isLoadingGet])
+
+    useEffect(() => {
+
+        if (isSuccessGet && (data !== undefined))
+            setClientes(data);
+
+    }, [isSuccessGet, data]);
+
+    useEffect(() => {
+
+        if (clientes.length > 0 && primeraVez) {
+            (clientes.find((cliente) => cliente.idCliente === Id)) ?
+                setClienteTemp(clientes.find((cliente) => { return cliente.idCliente === Id })!) :
+                setClienteTemp(clientedefault)
+            setPrimeraVez(false)
+        }
+        else {
+
+            setClienteTemp(clientedefault)
+
+        }
+
+    }, [clientes]);
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSelectedCUD({ checked: e.target.value })
-        console.log(selectedCUD);
     }
 
+    const handleSubmit = async (ClienteCreado: Cliente) => {
+        try {
+            await createCliente(ClienteCreado);
+            Swal.fire(
+                'Cliente agregado',
+                'El cliente ha sido agregado correctamente',
+                'success'
+            );
+        }
+        catch (e) {
+            Swal.fire(
+                'No se ha podido agregar el cliente',
+                'Hubo un error al momento de agregar al cliente',
+                'error'
+            )
+        }
+    }
 
+    const handleUpdate = async (ClienteCreado: Cliente) => {
+        try {
+            await updateCliente(ClienteCreado);
+            Swal.fire(
+                'Cliente Actualizado',
+                'El cliente ha sido actualizado correctamente',
+                'success'
+            );
+        }
+        catch (e) {
+            Swal.fire(
+                'No se ha podido actualizar el cliente',
+                'Hubo un error al momento de actualizar al cliente',
+                'error'
+            );
+        }
+    }
+
+    const handleDelete = async (idCliente: number) => {
+        try {
+            await deleteCliente(idCliente);
+            Swal.fire(
+                'Cliente Eliminado',
+                'El cliente ha sido eliminado con exito',
+                'success'
+            );
+        }
+        catch (e) {
+            Swal.fire(
+                'No se ha podido Eliminar el cliente',
+                'Hubo un error al momento de eliminado al cliente',
+                'error'
+            )
+        }
+    }
 
     return (
 
         <div className="container border bg-light">
-            {isLoading ? (
+            {isLoadingGet ? (
                 <>
                     <div className="row text-center">
                         <div className="col-5" />
@@ -81,25 +138,26 @@ export const ClienteScreen = ({ Id = 4 }: clienteScreenProps): JSX.Element => {
                     </div>
                 </>) :
                 (<>
-                    {!isSuccess ? (<>
-                        <div className="text-center">
-                            <br />
-                            <br />
-                            <br />
-                            <br />
-                            <br />
-                            <br />
-                            <br />
-                            <h1>Error al cargar los datos</h1>
-                            <br />
-                            <br />
-                            <br />
-                            <br />
-                            <br />
-                            <br />
-                            <br />
-                        </div>
-                    </>) :
+                    {!isSuccessGet ?
+                        (<>
+                            <div className="text-center">
+                                <br />
+                                <br />
+                                <br />
+                                <br />
+                                <br />
+                                <br />
+                                <br />
+                                <h1>Error de conexion</h1>
+                                <br />
+                                <br />
+                                <br />
+                                <br />
+                                <br />
+                                <br />
+                                <br />
+                            </div>
+                        </>) :
                         (<>
                             <div className="row text-center">
                                 <h1>Cliente</h1>
@@ -196,15 +254,86 @@ export const ClienteScreen = ({ Id = 4 }: clienteScreenProps): JSX.Element => {
                                 <button
                                     type="button"
                                     className="btn btn-outline-dark col-2"
-                                    onClick={() => console.log(clientes)}
-                                    disabled={(selectedCUD.checked === 'Eliminar')}
-                                >
+                                    onClick={() => {
+                                        if ((selectedCUD.checked === 'Agregar')) {
+                                            if(clientetemp.nombres.length>2 && clientetemp.apellidos.length>2 && clientetemp.telefono.length === 8)
+                                            {
+                                                handleSubmit(clientetemp);
+                                            }
+                                            else{
+                                                Swal.fire(
+                                                    'Datos invalidos',
+                                                    'Los datos proporcionados no son validos para crear un cliente',
+                                                    'error'
+                                                )
+                                            }
+                                        
+                                        }
+                                        else if ((selectedCUD.checked === 'Actualizar')) {
+                                            if (clientetemp.idCliente != 0) {
+                                                handleUpdate(clientetemp);
+                                            } else {
+                                                Swal.fire(
+                                                    'Seleccione un cliente',
+                                                    'No se ha selecionado ningun cliente',
+                                                    'warning'
+                                                )
+                                            }
+                                        }
+                                    }}
+                                    disabled={(selectedCUD.checked === 'Eliminar')}>
                                     Guardar
                                 </button>
                                 <div className='col-2' />
                                 <button
                                     type="button"
                                     className="btn btn-outline-dark col-2"
+                                    onClick={() => {
+                                        if (clientetemp.idCliente != 0) {
+                                            const swalWithBootstrapButtons = Swal.mixin({
+                                                customClass: {
+                                                    confirmButton: 'btn btn-success',
+                                                    cancelButton: 'btn btn-danger'
+                                                },
+                                                buttonsStyling: true
+                                            })
+
+                                            swalWithBootstrapButtons.fire({
+                                                title: 'Estas seguro?',
+                                                text: "Una vez que elimines a este cliente no se podra recuperar su informacion, recuerde que no se podra eliminar este cliente si tiene alguna factura a su nombre",
+                                                icon: 'warning',
+                                                showCancelButton: true,
+                                                confirmButtonText: 'Si, deseo eliminarlo',
+                                                cancelButtonText: 'No, prefiero modificarlo',
+                                                reverseButtons: true
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+
+                                                    if (/* Revisar en la base de datos que no tenga ninguna factura  ===*/ true) {
+
+                                                        handleDelete(clientetemp.idCliente);
+
+                                                    }
+
+                                                } else if (
+                                                    /* Read more about handling dismissals below */
+                                                    result.dismiss === Swal.DismissReason.cancel
+                                                ) {
+                                                    swalWithBootstrapButtons.fire(
+                                                        'Cancelado',
+                                                        'Se ha cancelado la eliminacion del cliente seleccionado',
+                                                        'success'
+                                                    )
+                                                }
+                                            })
+                                        } else {
+                                            Swal.fire(
+                                                'Seleccione un cliente',
+                                                'No se ha selecionado ningun cliente',
+                                                'warning'
+                                            )
+                                        }
+                                    }}
                                     disabled={!(selectedCUD.checked === 'Eliminar')}>
                                     Eliminar
                                 </button>
@@ -258,8 +387,6 @@ export const ClienteScreen = ({ Id = 4 }: clienteScreenProps): JSX.Element => {
                             </div>
                             <br />
                             <br />
-
-
                         </>)}
                 </>)}
         </div >

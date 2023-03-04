@@ -31,7 +31,6 @@ export const Input = ({ labe, inputText, setvalue, campo, objecto, disable = fal
                             maxLength={maxlength}
                             onChange={(e) => {
                                 setvalue({ ...objecto, [campo]: e.target.value })
-                                console.log(objecto)
                             }}
                         />
                     </div>
